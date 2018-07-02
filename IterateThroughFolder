@@ -1,33 +1,31 @@
 import os
-
-os.chdir("/Users/mariengiraud/Desktop/CV")
-
 from xlrd import open_workbook
+from xlwt import Workbook
+os.chdir("/Users/mariengiraud/Desktop")
 
-old_doc = raw_input(Quel fichier voulez-vous nettoyer ?)
-old = open_workbook(old_doc)
+workbook = "Centre de vacances.xlsx"
+
+old = open_workbook(workbook)
 for sheet in old.sheets():
     number_of_rows = sheet.nrows
-    number_of_columns = sheet.ncols
 
 values = []
 
 for row in range(1, number_of_rows):
     values.append(sheet.cell(row,0).value)
 
+new_adresses = []
 for item in values:
-    new_adresses = []
     if "<" in item or ">" in item :
         item = (item[item.index("<")+1:item.index(">")-1])
     else :
         item = item
-    item.append(new_adresses)
+    new_adresses.append(item)
 
-print(values)
-print("new_adresses = ")
 print(new_adresses)
 
-new_doc = old_doc[:-4]
-with open_workbook(new_doc + " updated") as new :
+# Create the updated version of the file
+f_name, f_ext = os.path.splitext(workbook)
+with open(f_name + " updated" + '.csv','w') as new :
     for adresses in new_adresses:
-        new.writelines(adresses)
+        new.write(adresses + '\n')
